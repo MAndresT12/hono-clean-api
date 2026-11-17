@@ -1,19 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { createApp } from '../src/app.js';
-import { buildContainer } from '../src/di/container.js';
-import { InMemoryTaskRepository } from './fakes/InMemoryTaskRepository.js';
+import { createApp } from '../../app.js';
+import { buildContainer } from '../../di/container.js';
+import { InMemoryTaskRepository } from '../../../tests/fakes/InMemoryTaskRepository.js';
+import { InMemoryUserRepository } from '../../../tests/fakes/InMemoryUserRepository.js';
 
-const app = createApp(buildContainer(new InMemoryTaskRepository()));
+const app = createApp(
+  buildContainer(new InMemoryTaskRepository(), new InMemoryUserRepository(), {
+    hash: async (plain) => `hashed:${plain}`,
+  }),
+);
 
 const jsonHeaders = { 'content-type': 'application/json' };
 
-describe('Presentation: HTTP API', () => {
-  it('healthcheck responde ok', async () => {
-    const res = await app.request('/health');
-    expect(res.status).toBe(200);
-    expect((await res.json()).status).toBe('ok');
-  });
-
+describe('Presentation: /tasks', () => {
   it('flujo completo CRUD', async () => {
     const created = await app.request('/tasks', {
       method: 'POST',

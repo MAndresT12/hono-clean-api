@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { Task } from '../src/domain/entities/Task.js';
+import { User } from '../src/domain/entities/User.js';
 import { ValidationError } from '../src/domain/errors/DomainError.js';
+
+describe('Domain: User entity', () => {
+  it('normaliza el email: sin espacios y en minúsculas', () => {
+    const user = new User({ email: '  Ana@Example.COM ', passwordHash: 'h' });
+    expect(user.email).toBe('ana@example.com');
+  });
+});
 
 describe('Domain: Task entity', () => {
   it('applies business rules on construction', () => {

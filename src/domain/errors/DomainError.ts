@@ -14,6 +14,9 @@ export class DomainError extends Error {
 /** Regla de negocio o dato de entrada inválido. */
 export class ValidationError extends DomainError {}
 
+/** La operación choca con el estado actual (p. ej. un email ya registrado). */
+export class ConflictError extends DomainError {}
+
 /** Entidad solicitada no encontrada. */
 export class NotFoundError extends DomainError {
   constructor(entity: string, id: number | string) {
